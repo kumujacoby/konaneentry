@@ -6,39 +6,100 @@
 <title>Kōnane Scorecard Entry</title>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Shared brand tokens */
   :root {
     --ks-blue:        #19325A;
     --ks-light-blue:  #4682F0;
     --ks-green:       #325550;
     --ks-light-green: #1E826E;
     --ks-gold:        #9B693B;
-    --ks-light-gold:  #D29642;
+    --ks-light-gold:  #C8881E;
     --ks-orange:      #B43C28;
     --ks-light-orange:#D24632;
     --ks-maroon:      #6E1432;
     --ks-grey:        #D2D2D2;
     --white:          #FFFFFF;
-    --bg:             #19325A;
-    --card-bg:        #1f3f72;
-    --card-border:    rgba(70,130,240,0.3);
-    --text:           #FFFFFF;
-    --text-muted:     #a8bde0;
-    --input-bg:       rgba(255,255,255,0.08);
-    --input-border:   rgba(70,130,240,0.5);
-    --accent:         #D29642;
     --win:            #1E826E;
     --loss:           #B43C28;
+    --accent:         #C8881E;
+  }
+  /* Light mode (day: 7am-7pm) */
+  html.light {
+    --bg:                    #F5F6F8;
+    --card-bg:               #FFFFFF;
+    --card-border:           rgba(25,50,90,0.15);
+    --text:                  #19325A;
+    --text-muted:            #5a6e8a;
+    --input-bg:              #F0F3F8;
+    --input-border:          rgba(25,50,90,0.25);
+    --body-grad-a:           #dde6f5;
+    --body-grad-b:           #f0e8d8;
+    --h1-color:              #19325A;
+    --game-block-bg:         #F8F9FC;
+    --game-block-border:     rgba(25,50,90,0.15);
+    --btn-primary:           #19325A;
+    --btn-primary-hover:     #254d8a;
+    --btn-primary-disabled:  #a0aec0;
+    --btn-csv-bg:            #FFFFFF;
+    --winner-btn-bg:         #FFFFFF;
+    --winner-btn-color:      #5a6e8a;
+    --winner-btn-border:     rgba(25,50,90,0.2);
+    --log-names-color:       #19325A;
+    --log-del-color:         rgba(25,50,90,0.2);
+    --empty-log-color:       rgba(25,50,90,0.25);
+    --no-players-color:      rgba(25,50,90,0.3);
+    --color-scheme:          light;
+    --divider-color:         #C8881E;
+    --select-option-bg:      #fff;
+    --select-option-color:   #19325A;
+    --card-shadow:           0 4px 24px rgba(25,50,90,0.1);
+    --btn-primary-shadow:    rgba(25,50,90,0.3);
+    --num-badge-bg:          #19325A;
+  }
+  /* Dark mode (night: 7pm-7am) */
+  html.dark {
+    --bg:                    #19325A;
+    --card-bg:               #1f3f72;
+    --card-border:           rgba(70,130,240,0.3);
+    --text:                  #FFFFFF;
+    --text-muted:            #a8bde0;
+    --input-bg:              rgba(255,255,255,0.08);
+    --input-border:          rgba(70,130,240,0.5);
+    --body-grad-a:           #254a82;
+    --body-grad-b:           #0f2240;
+    --h1-color:              #FFFFFF;
+    --game-block-bg:         rgba(0,0,0,0.15);
+    --game-block-border:     rgba(70,130,240,0.2);
+    --btn-primary:           #4682F0;
+    --btn-primary-hover:     #5a90ff;
+    --btn-primary-disabled:  #4a5a70;
+    --btn-csv-bg:            rgba(255,255,255,0.08);
+    --winner-btn-bg:         rgba(255,255,255,0.07);
+    --winner-btn-color:      #a8bde0;
+    --winner-btn-border:     rgba(255,255,255,0.15);
+    --log-names-color:       #FFFFFF;
+    --log-del-color:         rgba(255,255,255,0.2);
+    --empty-log-color:       rgba(255,255,255,0.2);
+    --no-players-color:      rgba(255,255,255,0.3);
+    --color-scheme:          dark;
+    --divider-color:         #4682F0;
+    --select-option-bg:      #1a3060;
+    --select-option-color:   white;
+    --card-shadow:           0 4px 24px rgba(0,0,0,0.3);
+    --btn-primary-shadow:    rgba(70,130,240,0.4);
+    --num-badge-bg:          #4682F0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--bg);
     background-image:
-      radial-gradient(ellipse at 15% 0%, #254a82 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 100%, #0f2240 0%, transparent 55%);
+      radial-gradient(ellipse at 15% 0%, var(--body-grad-a) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 100%, var(--body-grad-b) 0%, transparent 55%);
     font-family: 'Lexend', sans-serif;
     color: var(--text);
     min-height: 100vh;
     padding: 2rem 1rem 4rem;
+    transition: background 0.4s ease, color 0.4s ease;
   }
 
   header { text-align: center; margin-bottom: 2rem; }
@@ -50,20 +111,21 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.03em;
   }
-  h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; color: var(--white); letter-spacing: -0.02em; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; color: var(--h1-color); letter-spacing: -0.02em; }
   h1 span { color: var(--accent); }
   .subtitle { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.25rem; font-weight: 400; }
   header::after {
     content: ''; display: block; width: 80px; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--ks-light-blue), transparent);
+    background: linear-gradient(90deg, transparent, var(--divider-color), transparent);
     margin: 1rem auto 0;
   }
 
   .setup-banner {
     max-width: 540px; margin: 0 auto 1.4rem;
-    background: rgba(255,255,255,0.06);
+    background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 8px; padding: 1rem 1.2rem;
+    box-shadow: var(--card-shadow);
   }
   .setup-banner strong {
     display: block; font-size: 0.65rem; letter-spacing: 0.16em;
@@ -78,21 +140,21 @@
   .url-input {
     width: 100%; padding: 0.55rem 0.8rem;
     background: var(--input-bg); border: 1px solid var(--input-border);
-    border-radius: 6px; font-family: 'Lexend', sans-serif; font-size: 0.8rem; color: var(--white);
+    border-radius: 6px; font-family: 'Lexend', sans-serif; font-size: 0.8rem; color: var(--text);
   }
-  .url-input::placeholder { color: rgba(255,255,255,0.35); }
-  .url-input:focus { outline: none; border-color: var(--ks-light-blue); background: rgba(255,255,255,0.1); }
+  .url-input::placeholder { color: rgba(25,50,90,0.35); }
+  .url-input:focus { outline: none; border-color: var(--text); background: var(--card-bg); }
   .hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.4rem; }
 
   .card {
     background: var(--card-bg); border: 1px solid var(--card-border);
     border-radius: 10px; padding: 1.5rem; max-width: 540px;
-    margin: 0 auto 1.4rem; box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    margin: 0 auto 1.4rem; box-shadow: var(--card-shadow);
     position: relative; overflow: hidden;
   }
   .card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--ks-light-blue), var(--accent), var(--ks-light-green));
+    background: linear-gradient(90deg, var(--num-badge-bg), var(--accent), var(--ks-light-green));
   }
   .card-title {
     font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
@@ -107,67 +169,67 @@
   select, input[type="date"] {
     width: 100%; padding: 0.6rem 0.8rem;
     background: var(--input-bg); border: 1px solid var(--input-border);
-    border-radius: 6px; font-family: 'Lexend', sans-serif; font-size: 1rem; color: var(--white);
+    border-radius: 6px; font-family: 'Lexend', sans-serif; font-size: 1rem; color: var(--text);
     appearance: none; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D29642' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8881E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 0.8rem center;
     cursor: pointer; transition: border-color 0.2s, background 0.2s;
   }
-  input[type="date"] { background-image: none; color-scheme: dark; }
-  select option { background: #1a3060; color: white; }
-  select:focus, input[type="date"]:focus { outline: none; border-color: var(--ks-light-blue); background-color: rgba(255,255,255,0.1); }
+  input[type="date"] { background-image: none; color-scheme: var(--color-scheme); }
+  select option { background: var(--select-option-bg); color: var(--select-option-color); }
+  select:focus, input[type="date"]:focus { outline: none; border-color: var(--text); background-color: var(--card-bg); }
   .players-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 
   .game-block {
-    border: 1px solid rgba(70,130,240,0.2); border-radius: 8px;
-    padding: 1rem; margin-bottom: 0.8rem; background: rgba(0,0,0,0.15);
+    border: 1px solid var(--game-block-border); border-radius: 8px;
+    padding: 1rem; margin-bottom: 0.8rem; background: var(--game-block-bg);
   }
   .game-label {
-    font-size: 0.92rem; font-weight: 700; color: var(--white);
+    font-size: 0.92rem; font-weight: 700; color: var(--text);
     margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;
   }
   .game-label .num {
-    width: 22px; height: 22px; background: var(--ks-light-blue); color: white;
+    width: 22px; height: 22px; background: var(--num-badge-bg); color: white;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
   }
   .winner-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
   .winner-btn {
-    padding: 0.75rem 0.4rem; border: 1.5px solid rgba(255,255,255,0.15);
+    padding: 0.75rem 0.4rem; border: 1.5px solid var(--winner-btn-border);
     border-radius: 6px; font-family: 'Lexend', sans-serif; font-size: 0.95rem;
     font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center;
-    background: rgba(255,255,255,0.07); color: var(--text-muted); line-height: 1.35;
+    background: var(--winner-btn-bg); color: var(--winner-btn-color); line-height: 1.35;
   }
-  .winner-btn:hover { background: rgba(255,255,255,0.13); color: var(--white); border-color: rgba(255,255,255,0.3); }
-  .winner-btn.sel-win { background: var(--win); border-color: var(--win); color: white; box-shadow: 0 0 12px rgba(30,130,110,0.5); }
-  .winner-btn.sel-loss { background: var(--loss); border-color: var(--loss); color: white; box-shadow: 0 0 12px rgba(180,60,40,0.5); }
-  .no-players { font-size: 0.78rem; color: rgba(255,255,255,0.3); font-style: italic; text-align: center; padding: 0.4rem; }
+  .winner-btn:hover { background: var(--winner-btn-hover-bg); color: var(--winner-btn-hover-color); border-color: var(--winner-btn-hover-border); }
+  .winner-btn.sel-win { background: var(--win); border-color: var(--win); color: white; box-shadow: 0 0 12px rgba(30,130,110,0.4); }
+  .winner-btn.sel-loss { background: var(--loss); border-color: var(--loss); color: white; box-shadow: 0 0 12px rgba(180,60,40,0.4); }
+  .no-players { font-size: 0.78rem; color: var(--no-players-color); font-style: italic; text-align: center; padding: 0.4rem; }
 
   .actions {
     max-width: 540px; margin: 0 auto;
     display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
   }
   .btn-add {
-    padding: 0.8rem; background: var(--ks-light-blue); color: white; border: none;
+    padding: 0.8rem; background: var(--btn-primary); color: white; border: none;
     border-radius: 8px; font-family: 'Lexend', sans-serif; font-size: 0.9rem; font-weight: 700;
     cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.1s;
-    box-shadow: 0 2px 12px rgba(70,130,240,0.4);
+    box-shadow: 0 2px 12px var(--btn-primary-shadow);
   }
-  .btn-add:hover { background: #5a90ff; transform: translateY(-1px); }
+  .btn-add:hover { background: var(--btn-primary-hover); transform: translateY(-1px); }
   .btn-add:active { transform: translateY(0); }
-  .btn-add:disabled { background: #4a5a70; cursor: not-allowed; box-shadow: none; transform: none; }
+  .btn-add:disabled { background: var(--btn-primary-disabled); cursor: not-allowed; box-shadow: none; transform: none; }
   .btn-csv {
-    padding: 0.8rem; background: rgba(255,255,255,0.08); color: var(--text-muted);
+    padding: 0.8rem; background: var(--btn-csv-bg); color: var(--text-muted);
     border: 1px solid var(--card-border); border-radius: 8px; font-family: 'Lexend', sans-serif;
     font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
   }
-  .btn-csv:hover { background: rgba(255,255,255,0.13); color: white; }
+  .btn-csv:hover { background: var(--game-block-bg); color: var(--text); }
   .submit-msg { max-width: 540px; margin: 0.6rem auto 0; text-align: center; font-size: 0.75rem; color: var(--accent); min-height: 1rem; }
 
   .log-section { max-width: 540px; margin: 2rem auto 0; }
   .log-title { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; font-weight: 600; }
   .count-badge {
-    display: inline-block; background: var(--ks-light-blue); color: white;
+    display: inline-block; background: var(--num-badge-bg); color: white;
     border-radius: 10px; padding: 0.1rem 0.5rem; font-size: 0.65rem; font-weight: 700;
     margin-left: 0.4rem; vertical-align: middle;
   }
@@ -181,17 +243,17 @@
   .log-entry.failed { border-left: 3px solid var(--loss); }
   .log-entry.pending { opacity: 0.6; }
   @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  .log-names { font-weight: 600; color: var(--white); font-size: 0.85rem; }
+  .log-names { font-weight: 600; color: var(--log-names-color); font-size: 0.85rem; }
   .log-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
   .log-rows { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem; opacity: 0.7; }
   .log-status { font-size: 0.65rem; margin-top: 0.2rem; }
   .log-status.synced { color: #1E826E; }
   .log-status.failed { color: var(--loss); }
   .log-status.pending { color: #888; }
-  .log-status.local { color: #666; }
-  .log-del { background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; font-size: 1rem; padding: 0.2rem; flex-shrink: 0; transition: color 0.15s; }
+  .log-status.local { color: #888; }
+  .log-del { background: none; border: none; color: var(--log-del-color); cursor: pointer; font-size: 1rem; padding: 0.2rem; flex-shrink: 0; transition: color 0.15s; }
   .log-del:hover { color: var(--loss); }
-  .empty-log { text-align: center; color: rgba(255,255,255,0.2); font-size: 0.8rem; font-style: italic; padding: 1.5rem; }
+  .empty-log { text-align: center; color: var(--empty-log-color); font-size: 0.8rem; font-style: italic; padding: 1.5rem; }
   .wtag { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.68rem; font-weight: 700; }
   .wtag.w { background: rgba(30,130,110,0.25); color: #4ecba8; }
   .wtag.l { background: rgba(180,60,40,0.25); color: #f07060; }
@@ -200,9 +262,25 @@
     border-radius: 3px; padding: 0.1rem 0.35rem; cursor: pointer; margin-left: 0.35rem;
     vertical-align: middle; font-family: 'Lexend', sans-serif;
   }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    position: fixed; bottom: 1.2rem; right: 1.2rem;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 0.4rem 0.8rem;
+    font-family: 'Lexend', sans-serif; font-size: 0.7rem; font-weight: 600;
+    color: var(--text-muted); cursor: pointer;
+    box-shadow: var(--card-shadow); transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .theme-toggle:hover { color: var(--text); }
 </style>
 </head>
 <body>
+
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+  <span id="theme-icon">☀️</span> <span id="theme-label">Day</span>
+</button>
 
 <header>
   <h1>Kōnane <span>Scorecard</span> Entry</h1>
@@ -256,6 +334,34 @@
 </div>
 
 <script>
+// ── Auto theme: day = 7:00–19:00, night = 19:00–7:00 ──
+const DAY_START = 7, DAY_END = 19;
+let userOverride = null; // null = auto
+
+function getAutoTheme() {
+  const h = new Date().getHours();
+  return (h >= DAY_START && h < DAY_END) ? 'light' : 'dark';
+}
+
+function applyTheme(mode) {
+  document.documentElement.className = mode;
+  const isDay = mode === 'light';
+  document.getElementById('theme-icon').textContent  = isDay ? '🌙' : '☀️';
+  document.getElementById('theme-label').textContent = isDay ? 'Night' : 'Day';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.className;
+  userOverride = current === 'light' ? 'dark' : 'light';
+  applyTheme(userOverride);
+}
+
+// Apply on load
+applyTheme(getAutoTheme());
+
+// Re-check every minute in case the hour rolls over while the page is open
+setInterval(() => { if (!userOverride) applyTheme(getAutoTheme()); }, 60000);
+
 const NAMES = [
   "'Ekolu Perry","'Ilima Tomasello","Adela Plunkett-Woods","Aiden Mansanas","Aizen Correia",
   "Akiko Freitas","Alohi Kauwe","Ana Bailey","Anu Bello","Anuenue Hurwitz",
@@ -274,7 +380,7 @@ const NAMES = [
   "Kaila Sato","Kaimana Lui-Kwan","Kalea Kamakana","Kalia Oku","Kamakana Ayau",
   "Kamalani Murphy","Kamāmalu Kimokeo","Kamuela Kahele","Kawahine Lima","KC Goode",
   "Keahi Reyes","Keao Hall","Kia'i Choy","Kiili Kalama","Kingston De Lima",
-  "KJ Daubert","Kody Horita","Kolo Fatongia","Lea Keliʻi","Legend Bird", "Legend Lindsey",
+  "KJ Daubert","Kody Horita","Kolo Fatongia","Lea Keliʻi","Legend Bird","Legend Lindsey",
   "Leiamarie Moura","Leif Stensgaard","Leo Kuhau-Liftee","Leonuranui Lopez","Lia Keohokalole",
   "Liliana-Marie Hoohuli","Logan Siu","Luke Chong Tim","Makenzie Wong","Maluhia Davidson-Eborn",
   "Masaki Yaguchi","Mason Unciano","Maya Texeira","Mealii Kahakelii","Meleana Hong",
